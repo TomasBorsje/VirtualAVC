@@ -8,7 +8,7 @@
 ● Tomas B / Tomas#9529 (Discord) / ​borsjetoma@myvuw.ac.nz
 ● Rose T/ WhiteRose#6406 (Discord) / ​taylorrose3@myvuw.ac.nz
 ● Ryan H / Rith#7410 (Discord) / ​riththurn@gmail.com​ & ​hurnenryan@myvuw.ac.nz
-● X
+● Connor N / Meowth (very Important )#2752 (Discord) / nobbsconn@myvuw.ac.nz
 ```
 # Communication tool:
 
