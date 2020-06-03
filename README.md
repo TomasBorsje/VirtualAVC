@@ -1,6 +1,6 @@
 # AVC Plan
 
-# Team Name:
+# Team Name: Team 22
 
 # Team Members & contact info:
 
@@ -16,11 +16,11 @@ Google doc, Discord group chat, Github issues & wiki, email.
 
 # Roles:
 
-X - Project Manager (organising team meetings, reporting regularly on progress)\
-X - Software Architect (writing core code and extending functionality)\
-X - Software writing, testing and documentation (debugging software and committing to
+Rose - Project Manager (organising team meetings, reporting regularly on progress)\
+Connor - Software Architect (writing core code and extending functionality)\
+Tomas - Software writing, testing and documentation (debugging software and committing to
 git, writing test cases and documenting performance against milestones)\
-X - Software writing, testing and documentation (debugging software and committing to
+Ryan - Software writing, testing and documentation (debugging software and committing to
 git, writing test cases and documenting performance against milestones)\
 Github: ​https://github.com/TomasBorsje/VirtualAVC
 
