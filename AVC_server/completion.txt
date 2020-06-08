@@ -1,0 +1,17 @@
+size,1200,900
+back,grass-texture.png
+curve,255,255,255,10,100,200,100,300,100,300,300,300,450
+curve,255,255,255,300,300,800,300
+curve,255,255,255,800,300,800,700
+curve,255,255,255,900,700,650,700,650,550,450,550,450,700
+curve,255,255,255,450,700,450,800,100,800
+wall,255,0,0,400,390,650,390
+wall,255,0,0,900,50,900,150
+image,950,400,duck.png
+image,30,600,house1.png
+image,130,600,house1.png
+image,230,600,house1.png
+image,450,100,house1.png
+image,550,100,house1.png
+image,650,100,house1.png
+image,50,750,finish.png

@@ -1,0 +1,12 @@
+mazeFile,core.txt
+robot.pos.x,10.0
+robot.pos.y,100.0
+robot.azimuth,0.0
+robot.vLeft,10.0
+robot.vRight,10.0
+robot.wheelRadius,8.0
+robot.width,30.0
+robot.length,50.0
+robot.cameraForward,100.0
+robot.fovWidth,150.0
+robot.fovLength,100.0
