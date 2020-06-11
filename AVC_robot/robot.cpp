@@ -83,7 +83,7 @@ int main(){
 	// Declare constants
 	const static int WADDLE_WIDTH = 50; 
 	const static int WADDLE_HEIGHT = 40;
-	const static int PIXEL_THRESHHOLD = 5;
+	const static int PIXEL_THRESHOLD = 5;
 	const static double ROBOT_SPEED = 25.0;
 	
 	if (initClientRobot() !=0){
@@ -118,17 +118,17 @@ int main(){
 			}			
 		}
 		
-		if(leftWhitePixels > PIXEL_THRESHHOLD && rightWhitePixels > PIXEL_THRESHHOLD) // Go forward
+		if(leftWhitePixels > PIXEL_THRESHOLD && rightWhitePixels > PIXEL_THREHHOLD) // Go forward
 		{
 			vLeft = ROBOT_SPEED;
 			vRight = ROBOT_SPEED;
 		}
-		else if(leftWhitePixels > PIXEL_THRESHHOLD) // Go left
+		else if(leftWhitePixels > PIXEL_THRESHOLD) // Go left
 		{
 			vLeft = 0.0;
 			vRight = ROBOT_SPEED;
 		}
-		else if(rightWhitePixels > PIXEL_THRESHHOLD) // Go right
+		else if(rightWhitePixels > PIXEL_THRESHOLD) // Go right
 		{
 			vLeft = ROBOT_SPEED;
 			vRight = 0.0;			
