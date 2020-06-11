@@ -1,6 +1,7 @@
 #include "robot.hpp"
 #include <algorithm>
 #include <functional>
+#include <cmath>
 
 struct RGB  // Define RGB structure
 {  
@@ -44,7 +45,7 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	}
 	else
 	{
-		cout<<"Error in finding cMax comparison";
+		std::cout<<"Error in finding cMax comparison";
 	}
 	
 	if(cMax==0.0) // Saturation calculation
@@ -77,7 +78,7 @@ int main(){
     while(1){
       setMotors(vLeft,vRight);   
       std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
-       usleep(10000);
+      usleep(10000);
   } //while
 
 } // main
