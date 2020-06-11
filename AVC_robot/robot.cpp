@@ -67,18 +67,77 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	return hsvToReturn; // Return HSV equivalent!
 }
 
+int isPixelWhite(int luminosity)
+{
+	if(luminosity > 240)
+	{
+		return 1; 
+	}
+	else 
+	{
+		return 0;
+	}
+}
+
 int main(){
+	// Declare constants
+	const static int WADDLE_WIDTH = 50; 
+	const static int WADDLE_HEIGHT = 40;
+	const static int PIXEL_THRESHHOLD = 5;
+	const static double ROBOT_SPEED = 25.0;
+	
 	if (initClientRobot() !=0){
 		std::cout<<" Error initializing robot"<<std::endl;
 	}
-    double vLeft = 40.0;
-    double vRight = 30.0;
-    takePicture();
-    SavePPMFile("i0.ppm",cameraView);
-    while(1){
-      setMotors(vLeft,vRight);   
-      std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
-      usleep(10000);
-  } //while
+    double vLeft = ROBOT_SPEED;
+    double vRight = ROBOT_SPEED;
+    ImagePPM currentFrame; // Variable to store current frame in
 
-} // main
+    while(1){
+		takePicture(); // Take picture
+		SavePPMFile("view.ppm",cameraView); // Save it as view.ppm
+		
+		OpenPPMFile("view.ppm", currentFrame); // Open view.ppm, and save the contents in currentFrame variable
+		
+		//std::cout<<"width:"<<currentFrame.width; // Print image stats
+		//std::cout<<"height:"<<currentFrame.height;
+		int leftWhitePixels = 0;
+		int rightWhitePixels = 0;
+		for(int currentRow = currentFrame.height - WADDLE_HEIGHT; currentRow < currentFrame.height; currentRow++) // For each of the bottom 40 rows
+		{ 
+			int pixelGrayscale;
+			for(int leftColumn = 0; leftColumn < WADDLE_WIDTH; leftColumn++) // Split into left and right as we are not scanning the middle
+			{
+				pixelGrayscale = get_pixel(currentFrame, currentRow, leftColumn, 3); // Get grayscale of pixel
+				leftWhitePixels += isPixelWhite(pixelGrayscale); // Use checker method to see if it is and add the returned value to white pixels var
+			}
+			for(int rightColumn = 2*WADDLE_WIDTH; rightColumn < currentFrame.width; rightColumn++) // Right side (pixels 100-150)
+			{
+				pixelGrayscale = get_pixel(currentFrame, currentRow, rightColumn, 3); // Same thing but for right side
+				rightWhitePixels += isPixelWhite(pixelGrayscale);
+			}			
+		}
+		
+		if(leftWhitePixels > PIXEL_THRESHHOLD && rightWhitePixels > PIXEL_THRESHHOLD) // Go forward
+		{
+			vLeft = ROBOT_SPEED;
+			vRight = ROBOT_SPEED;
+		}
+		else if(leftWhitePixels > PIXEL_THRESHHOLD) // Go left
+		{
+			vLeft = 0.0;
+			vRight = ROBOT_SPEED;
+		}
+		else if(rightWhitePixels > PIXEL_THRESHHOLD) // Go right
+		{
+			vLeft = ROBOT_SPEED;
+			vRight = 0.0;			
+		}
+
+		setMotors(vLeft,vRight);   
+		//std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
+		//std::cout<<"Left="<<leftWhitePixels<<" Right="<<rightWhitePixels<<std::endl;
+		usleep(10000);
+  }
+
+}
