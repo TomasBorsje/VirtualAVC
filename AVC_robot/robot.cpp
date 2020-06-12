@@ -118,7 +118,7 @@ int main(){
 			}			
 		}
 		
-		if(leftWhitePixels > PIXEL_THRESHOLD && rightWhitePixels > PIXEL_THREHHOLD) // Go forward
+		if(leftWhitePixels > PIXEL_THRESHOLD && rightWhitePixels > PIXEL_THRESHOLD) // Go forward
 		{
 			vLeft = ROBOT_SPEED;
 			vRight = ROBOT_SPEED;
