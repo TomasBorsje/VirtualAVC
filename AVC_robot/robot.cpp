@@ -92,7 +92,9 @@ int main(){
     double vLeft = ROBOT_SPEED;
     double vRight = ROBOT_SPEED;
     ImagePPM currentFrame; // Variable to store current frame in
-
+	
+	int ticks = 0;
+	
     while(1){
 		takePicture(); // Take picture
 		SavePPMFile("view.ppm",cameraView); // Save it as view.ppm
@@ -117,27 +119,37 @@ int main(){
 				rightWhitePixels += isPixelWhite(pixelGrayscale);
 			}			
 		}
-		
-		if(leftWhitePixels > PIXEL_THRESHHOLD && rightWhitePixels > PIXEL_THRESHHOLD) // Go forward
+		if(ticks < 45)
 		{
-			vLeft = ROBOT_SPEED;
-			vRight = ROBOT_SPEED;
+			ticks++;
+			vLeft = 15.0;
+		    vRight = -15.0;
 		}
-		else if(leftWhitePixels > PIXEL_THRESHHOLD) // Go left
+		else
 		{
 			vLeft = 0.0;
-			vRight = ROBOT_SPEED;
+		    vRight = 0.0;
 		}
-		else if(rightWhitePixels > PIXEL_THRESHHOLD) // Go right
-		{
-			vLeft = ROBOT_SPEED;
-			vRight = 0.0;			
-		}
+
+		//if(leftWhitePixels > PIXEL_THRESHHOLD && rightWhitePixels > PIXEL_THRESHHOLD) // Go forward
+		//{
+			//vLeft = ROBOT_SPEED;
+			//vRight = ROBOT_SPEED;
+		//}
+		//else if(leftWhitePixels > PIXEL_THRESHHOLD) // Go left
+		//{
+			//vLeft = 0.0;
+			//vRight = ROBOT_SPEED;
+		//}
+		//else if(rightWhitePixels > PIXEL_THRESHHOLD) // Go right
+		//{
+			//vLeft = ROBOT_SPEED;
+			//vRight = 0.0;			
+		//}
 
 		setMotors(vLeft,vRight);   
 		//std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
 		//std::cout<<"Left="<<leftWhitePixels<<" Right="<<rightWhitePixels<<std::endl;
 		usleep(10000);
   }
-
 }
