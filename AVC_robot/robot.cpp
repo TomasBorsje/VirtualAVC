@@ -119,8 +119,8 @@ int main(){
 				// Use checker method to see if it is and add the returned value to white pixels var
 				leftWhitePixels += isPixelWhite(pixelGrayscale); 
 			}
-			// Right side (pixels 100-1
-			for(int rightColumn = 2*WADDLE_WIDTH; rightColumn < currentFrame.width; rightColumn++) 50)
+			// Right side (pixels 100-150)
+			for(int rightColumn = 2*WADDLE_WIDTH; rightColumn < currentFrame.width; rightColumn++) 
 			{
 				// Same thing but for right side
 				pixelGrayscale = get_pixel(currentFrame, currentRow, rightColumn, 3); 
