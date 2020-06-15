@@ -10,7 +10,8 @@ struct RGB  // Define RGB structure
     int b;
 };
 
-struct HSV // Define HSV structure - Example: https://upload.wikimedia.org/wikipedia/commons/f/f2/HSV_color_solid_cone.png
+// Define HSV structure - Example: https://upload.wikimedia.org/wikipedia/commons/f/f2/HSV_color_solid_cone.png
+struct HSV 
 {  
     int H;  // Hue, 0 - 360 (what base colour this actually is (sees in the dark!))
     float S;  // Saturation, 0-1 
@@ -80,55 +81,66 @@ int isPixelWhite(int luminosity)
 }
 
 int main(){
-	// Declare constants
-	const static int WADDLE_WIDTH = 50; 
-	const static int WADDLE_HEIGHT = 40;
-	const static int PIXEL_THRESHOLD = 5;
-	const static double ROBOT_SPEED = 25.0;
+    // Declare constants
+    const static int WADDLE_WIDTH = 50; 
+    const static int WADDLE_HEIGHT = 40;
+    const static int PIXEL_THRESHOLD = 5;
+    const static double ROBOT_SPEED = 25.0;
 	
-	if (initClientRobot() !=0){
-		std::cout<<" Error initializing robot"<<std::endl;
-	}
+    if (initClientRobot() !=0){
+	std::cout<<" Error initializing robot"<<std::endl;
+    }
     double vLeft = ROBOT_SPEED;
     double vRight = ROBOT_SPEED;
-    ImagePPM currentFrame; // Variable to store current frame in
+    // Variable to store current frame in
+    ImagePPM currentFrame; 
 
     while(1){
-		takePicture(); // Take picture
-		SavePPMFile("view.ppm",cameraView); // Save it as view.ppm
-		
-		OpenPPMFile("view.ppm", currentFrame); // Open view.ppm, and save the contents in currentFrame variable
+	    	// Take picture
+		takePicture(); 
+	        // Save it as view.ppm
+		SavePPMFile("view.ppm",cameraView); 
+		// Open view.ppm, and save the contents in currentFrame variable
+		OpenPPMFile("view.ppm", currentFrame); 
 		
 		//std::cout<<"width:"<<currentFrame.width; // Print image stats
 		//std::cout<<"height:"<<currentFrame.height;
 		int leftWhitePixels = 0;
 		int rightWhitePixels = 0;
-		for(int currentRow = currentFrame.height - WADDLE_HEIGHT; currentRow < currentFrame.height; currentRow++) // For each of the bottom 40 rows
+	        // For each of the bottom 40 rows
+		for(int currentRow = currentFrame.height - WADDLE_HEIGHT; currentRow < currentFrame.height; currentRow++) 
 		{ 
 			int pixelGrayscale;
-			for(int leftColumn = 0; leftColumn < WADDLE_WIDTH; leftColumn++) // Split into left and right as we are not scanning the middle
+			// Split into left and right as we are not scanning the middle
+			for(int leftColumn = 0; leftColumn < WADDLE_WIDTH; leftColumn++) 
 			{
-				pixelGrayscale = get_pixel(currentFrame, currentRow, leftColumn, 3); // Get grayscale of pixel
-				leftWhitePixels += isPixelWhite(pixelGrayscale); // Use checker method to see if it is and add the returned value to white pixels var
+				// Get grayscale of pixel
+				pixelGrayscale = get_pixel(currentFrame, currentRow, leftColumn, 3); 
+				// Use checker method to see if it is and add the returned value to white pixels var
+				leftWhitePixels += isPixelWhite(pixelGrayscale); 
 			}
-			for(int rightColumn = 2*WADDLE_WIDTH; rightColumn < currentFrame.width; rightColumn++) // Right side (pixels 100-150)
+			// Right side (pixels 100-1
+			for(int rightColumn = 2*WADDLE_WIDTH; rightColumn < currentFrame.width; rightColumn++) 50)
 			{
-				pixelGrayscale = get_pixel(currentFrame, currentRow, rightColumn, 3); // Same thing but for right side
+				// Same thing but for right side
+				pixelGrayscale = get_pixel(currentFrame, currentRow, rightColumn, 3); 
 				rightWhitePixels += isPixelWhite(pixelGrayscale);
 			}			
 		}
-		
-		if(leftWhitePixels > PIXEL_THRESHOLD && rightWhitePixels > PIXEL_THRESHOLD) // Go forward
+		// Go forward
+		if(leftWhitePixels > PIXEL_THRESHOLD && rightWhitePixels > PIXEL_THRESHOLD) 
 		{
 			vLeft = ROBOT_SPEED;
 			vRight = ROBOT_SPEED;
 		}
-		else if(leftWhitePixels > PIXEL_THRESHOLD) // Go left
+	        // Go left
+		else if(leftWhitePixels > PIXEL_THRESHOLD) 
 		{
 			vLeft = 0.0;
 			vRight = ROBOT_SPEED;
 		}
-		else if(rightWhitePixels > PIXEL_THRESHOLD) // Go right
+	    	// Go right
+		else if(rightWhitePixels > PIXEL_THRESHOLD) 
 		{
 			vLeft = ROBOT_SPEED;
 			vRight = 0.0;			
