@@ -115,4 +115,4 @@ To swap to a different maze open the config.txt file in AVC_server and change th
 You must save config.txt for the change in maze to work.\
 To swap what code the robot.exe is running you must first delete the robot.exe file and then edit the makefile in AVC_robot.\
 For it to run the completion code change robot.cpp to robotcompletion.cpp then build it.\
-For it to run the challenge code change robot.cpp to robotchallenge.cpp\
+For it to run the challenge code change robot.cpp to robotchallenge.cpp.
