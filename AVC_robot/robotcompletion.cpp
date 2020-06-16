@@ -3,9 +3,11 @@
 #include <functional>
 #include <cmath>
 
-struct RGB  // Define RGB structure
+// Define RGB structure
+struct RGB 
 {  
-    int r; // R, G, and B values are 0-255
+    // R, G, and B values are 0-255
+    int r;
     int g;
     int b;
 };
@@ -18,7 +20,8 @@ struct HSV
     float V; // Value, 0-1
 };    
 
-HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting the math's algorithm to c++
+// RGB to HSV function I created by adapting the math's algorithm to c++
+HSV returnHSV(int r, int g, int b)
 {
 	double rRange = r/255.0;
 	double gRange = g/255.0;
@@ -32,7 +35,8 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	double S;
 	double V;
 
-	if(cMax==rRange) // Hue calculation
+	// Hue calculation
+	if(cMax==rRange)
 	{
 		H=60*fmod((gRange-bRange)/delta,6);
 	}
@@ -49,7 +53,8 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 		std::cout<<"Error in finding cMax comparison";
 	}
 	
-	if(cMax==0.0) // Saturation calculation
+	// Saturation calculation
+	if(cMax==0.0)
 	{
 		S=0;
 	}
@@ -57,8 +62,9 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	{
 		S=delta/cMax;
 	}
-
-	V=cMax; // Value calculation
+	
+	// Value calculation
+	V=cMax;
 
 	HSV hsvToReturn;
 	hsvToReturn.H = H;
@@ -130,28 +136,37 @@ int main(){
 		// Calculate average X location of white pixels
 		averageWhiteXValue = (double)totalWhiteXValue / (double)totalWhitePixels ;
 		
-		// Check there are actually pixels, otherwise the robot flies off the map
+		// Check there are actually pixels, otherwise the robot turns around
 		if(totalWhitePixels > 0)
 		{
 			std::cout<<"Average white "<<averageWhiteXValue;
-			if(abs(averageWhiteXValue - currentFrame.width / 2) < 20) // If the pixels are mostly centered
+			// If the pixels are mostly centered, move forward
+			if(abs(averageWhiteXValue - currentFrame.width / 2) < 20)
 			{
-				vLeft = ROBOT_SPEED; // Move forward
+				vLeft = ROBOT_SPEED;
 				vRight = ROBOT_SPEED;
 			}
-			else if (averageWhiteXValue > currentFrame.width/2) // If the pixels are to the left
+			// If the pixels are to the left, turn left
+			else if (averageWhiteXValue > currentFrame.width/2)
 			{
 				vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER;
-				vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER + ROBOT_SPEED/2; // Turn left
+				vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER + ROBOT_SPEED/2;
 				setMotors(vLeft,vRight);			
 			}
-			else  // If the pixels are to the right
+			// If the pixels are to the right, turn right
+			else
 			{
-				vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER + ROBOT_SPEED/2; // Turn right
+				vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER + ROBOT_SPEED/2;
 				vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER;
 				setMotors(vLeft,vRight);					
 			}
    
+	    }
+	    else
+	    {
+			vLeft = 10;
+			vRight = 0;
+			setMotors(vLeft,vRight);
 	    }
 		//std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
 		//std::cout<<"Left="<<leftWhitePixels<<" Right="<<rightWhitePixels<<std::endl;
