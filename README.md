@@ -101,7 +101,7 @@ Making sure everything is finished. Cleaning up any small bugs or tasks left to 
 # Instructions to run this project
 
 If you are using Geany these are the instructions:\
-First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/.\
+First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/. \
 Download the version that is appropriate for you and the one that aligns with your version of MinGW.\
 Example if you are downloading the "GCC 7.3.0 MinGW (SEH) - 64-bit" SFML library you also have downloaded "MinGW Builds 7.3.0 (64-bit)" as the library version you download must match the compiler version you are using.\
 Next in Geany is the build tab at the top, click on set build commands and set make to " mingw32-make ".\
