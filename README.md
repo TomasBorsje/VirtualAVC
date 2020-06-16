@@ -98,3 +98,20 @@ Making sure everything is finished. Cleaning up any small bugs or tasks left to 
 ● [Project Manager] Organise check ins or discussions (Discord)
 ```
 
+# Instructions to run this project
+
+If you are using Geany these are the instructions:
+First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/.
+Download the version that is appropriate for you and the one that aligns with your version of MinGW. Example if you are downloading the "GCC 7.3.0 MinGW (SEH) - 64-bit" SFML library you also have downloaded "MinGW Builds 7.3.0 (64-bit)" as the library version you download must match the compiler version you are using.
+Next in Geany is the build tab at the top, click on set build commands and set make to " mingw32-make ".
+Next you need to download our AVC_robot folder and our AVC_server folder. Both are needed to run this project.
+Next copy the .dll files from the SFML library from the bin folder into the AVC_server and AVC_robot folder.
+Next delete server3.exe from AVC_server and robot.exe from AVC_robot.
+Next open the makefile in the AVC_server folder and change the top line to the file pathway that leads you to the SFML library and then build it using the build tab at the top of Geany.
+Next open the makefile in the AVC_robot folder and change the top line to the file pathway that leads you to the SFML library and then build it using the build tab at the top of Geany.
+Next run the server3.exe file and then the robot.exe file. The robot shoud move start to move.
+To swap to a different maze open the config.txt file in AVC_server and change the first line called mazeFile to completion.txt for the completion maze or challenge.txt for the challenge maze. To change back you can write core.txt for the core maze.
+You must save config.txt for the change in maze to work.
+To swap what code the robot.exe is running you must first delete the robot.exe file and then edit the makefile in AVC_robot.
+For it to run the completion code change robot.cpp to robotcompletion.cpp then build it.
+For it to run the challenge code change robot.cpp to robotchallenge.cpp
