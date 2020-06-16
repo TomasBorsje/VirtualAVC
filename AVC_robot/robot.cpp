@@ -3,9 +3,11 @@
 #include <functional>
 #include <cmath>
 
-struct RGB  // Define RGB structure
+// Define RGB structure
+struct RGB
 {  
-    int r; // R, G, and B values are 0-255
+    // R, G, and B values are 0-255
+    int r; 
     int g;
     int b;
 };
@@ -18,7 +20,8 @@ struct HSV
     float V; // Value, 0-1
 };    
 
-HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting the math's algorithm to c++
+// RGB to HSV function I created by adapting the math's algorithm to c++
+HSV returnHSV(int r, int g, int b) 
 {
 	double rRange = r/255.0;
 	double gRange = g/255.0;
@@ -31,8 +34,9 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	int H;
 	double S;
 	double V;
-
-	if(cMax==rRange) // Hue calculation
+        
+	// Hue calculation
+	if(cMax==rRange)
 	{
 		H=60*fmod((gRange-bRange)/delta,6);
 	}
@@ -48,8 +52,8 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	{
 		std::cout<<"Error in finding cMax comparison";
 	}
-	
-	if(cMax==0.0) // Saturation calculation
+	// Saturation calculation
+	if(cMax==0.0)
 	{
 		S=0;
 	}
@@ -57,15 +61,16 @@ HSV returnHSV(int r, int g, int b) // RGB to HSV function I created by adapting 
 	{
 		S=delta/cMax;
 	}
-
+	
 	V=cMax; // Value calculation
 
 	HSV hsvToReturn;
 	hsvToReturn.H = H;
 	hsvToReturn.S = S;
 	hsvToReturn.V = V;
-
-	return hsvToReturn; // Return HSV equivalent!
+	
+        // Return HSV equivalent!
+	return hsvToReturn;
 }
 
 int isPixelWhite(int luminosity)
