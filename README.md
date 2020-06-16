@@ -1,4 +1,4 @@
-# AVC Plan
+# AVC Plan - Install Instructions at Bottom of Readme
 
 # Team Name: Team 22
 
