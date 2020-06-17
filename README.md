@@ -1,9 +1,9 @@
 # Instructions to run this project (Windows 10)
 
-Install the latest MinGW version from https://osdn.net/projects/mingw/releases/. \
-When installing MinGW, make sure to tick the mingw32-gcc-g++ package as it is required. \ 
-Install Geany from https://www.geany.org/.
-First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/. \
+Install the latest MinGW version from https://osdn.net/projects/mingw/releases/ for Windows.\
+When installing MinGW, make sure to tick the mingw32-gcc-g++ package as it is required.\ 
+Install Geany from https://www.geany.org/ for Windows.\
+First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/ and extract it somewhere you can remember.\
 Download the version that is appropriate for you and the one that aligns with your version of MinGW.\
 Example if you are downloading the "GCC 7.3.0 MinGW (SEH) - 64-bit" SFML library you also have downloaded "MinGW Builds 7.3.0 (64-bit)" as the library version you download must match the compiler version you are using.\
 Next in Geany is the build tab at the top, click on set build commands and set make to " mingw32-make ".\
