@@ -95,81 +95,89 @@ RGB getPixelRGB(ImagePPM currentFrame, int row, int column)
 	return RGBToReturn;
 }
 
-bool isPixelRed(HSV pixel)
+bool isPixelRed(RGB pixel)
 {
-	if(pixel.H > 340 || pixel.H < 20) // Pixel's hue is red
+	if(pixel.r > 250 && pixel.g < 5 && pixel.b < 5)
 	{
-		if(pixel.S > 70) // Pixel is saturated enough
-		{
-			if(pixel.V > 75) // Pixel is bright enough
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
+		return true;
 	}
-	
 	else
 	{
 		return false;
 	}
-	
-	
 }
 
 bool isLeftSideRed(ImagePPM currentFrame)
 {
-	for(int i = 0; i < 40; i++) // Width
+	bool isRed = false;
+	int width = currentFrame.width / 2 - 1;
+	for(int i = 0; i < width; i++) // Width
 	{
 		for(int row = 0; row < currentFrame.height; row++) // Height
 		{
-			RGB pixel = getPixelRGB(currentFrame, row, i);
-			if(isPixelRed(returnHSV(pixel.r,pixel.g,pixel.b)))
+			if(isPixelRed(getPixelRGB(currentFrame, row, i)))
 			{
-				return true;
+				isRed = true;
 			}
 		}
 	}
-	return false;
+	if(isRed)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool isRightSideRed(ImagePPM currentFrame)
 {
-	for(int i = currentFrame.width - 40; i < currentFrame.width; i++) // Width
+	bool isRed = false;
+	int width = currentFrame.width / 2 - 1;
+	for(int i = currentFrame.width - width; i < currentFrame.width; i++) // Width
 	{
 		for(int row = 0; row < currentFrame.height; row++) // Height
 		{
-			RGB pixel = getPixelRGB(currentFrame, row, i);
-			if(isPixelRed(returnHSV(pixel.r,pixel.g,pixel.b)))
+			if(isPixelRed(getPixelRGB(currentFrame, row, i)))
 			{
-				return true;
+				isRed = true;
 			}
 		}
 	}
-	return false;
+	if(isRed)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool isFrontSideRed(ImagePPM currentFrame)
 {
-	for(int i = 0; i < currentFrame.width; i++) // Width
+	bool isRed = false;
+	int width = 30;
+	int height = 60;
+	for(int i = width; i < currentFrame.width-width; i++) // Width, doesn't check edge **width** pixels
 	{
-		for(int row = 0; row < 40; row++) // Height
+		for(int row = 0; row < height; row++) // Height
 		{
-			RGB pixel = getPixelRGB(currentFrame, row, i);
-			if(isPixelRed(returnHSV(pixel.r,pixel.g,pixel.b)))
+			if(isPixelRed(getPixelRGB(currentFrame, row, i)))
 			{
-				return true;
+				isRed = true;
 			}
 		}
 	}
-	return false;
+	if(isRed)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 int main(){
@@ -177,7 +185,7 @@ int main(){
     const static int WADDLE_WIDTH = 50; 
     const static int WADDLE_HEIGHT = 40;
     const static int PIXEL_THRESHOLD = 5;
-    const static double ROBOT_SPEED = 25.0;
+    const static double ROBOT_SPEED = 16.5;
     const static double TURN_MULTIPLIER = 0.25;
 	
     if (initClientRobot() !=0){
@@ -189,6 +197,7 @@ int main(){
     int leftRedPixels;
     int rightRedPixels;
     int middleRedPixels;
+    bool leftWhiteLine;
 
     // Variable to store current frame in
     ImagePPM currentFrame; 
@@ -231,33 +240,39 @@ int main(){
 		
 		// Calculate average X location of white pixels
 		averageWhiteXValue = (double)totalWhiteXValue / (double)totalWhitePixels ;
-		
-		// Check there are actually pixels, otherwise the robot does not do anything relating to the white line
-		if(totalWhitePixels > 0)
+		if(!leftWhiteLine)
 		{
-			std::cout<<"Average white "<<averageWhiteXValue;
-			// If the pixels are mostly centered, move forward
-			if(abs(averageWhiteXValue - currentFrame.width / 2) < 20)
+			// Check there are actually pixels, otherwise the robot does not do anything relating to the white line
+			if(totalWhitePixels > 0)
 			{
-				vLeft = ROBOT_SPEED;
-				vRight = ROBOT_SPEED;
+				std::cout<<"Average white "<<averageWhiteXValue;
+				// If the pixels are mostly centered, move forward
+				if(abs(averageWhiteXValue - currentFrame.width / 2) < 20)
+				{
+					vLeft = ROBOT_SPEED;
+					vRight = ROBOT_SPEED;
+				}
+				// If the pixels are to the left, turn left
+				else if (averageWhiteXValue > currentFrame.width/2)
+				{
+					vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER;
+					vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER + ROBOT_SPEED/2;
+					setMotors(vLeft,vRight);			
+				}
+				// If the pixels are to the right, turn right
+				else
+				{
+					vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER + ROBOT_SPEED/2;
+					vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER;
+					setMotors(vLeft,vRight);					
+				}
+	   
 			}
-			// If the pixels are to the left, turn left
-			else if (averageWhiteXValue > currentFrame.width/2)
-			{
-				vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER;
-				vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER + ROBOT_SPEED/2;
-				setMotors(vLeft,vRight);			
-			}
-			// If the pixels are to the right, turn right
 			else
 			{
-				vLeft = -((currentFrame.width / 2) - averageWhiteXValue) * TURN_MULTIPLIER + ROBOT_SPEED/2;
-				vRight =  -(averageWhiteXValue - (currentFrame.width / 2)) * TURN_MULTIPLIER;
-				setMotors(vLeft,vRight);					
+				leftWhiteLine = true;
 			}
-   
-	    }
+		}
 	    else // There is no white line, we do this instead of white line logic
 	    {
 	    
@@ -273,34 +288,49 @@ int main(){
 			// Now we must check if there is red right infront of the robot
 			// If there is, we REVERSE before doing anything else
 			
-			RGB center1 = getPixelRGB(currentFrame, 99, 70); // 70 and 80 are 5 pixels away from the center width of the image
-			RGB center2 = getPixelRGB(currentFrame, 99, 80);
+			RGB center1 = getPixelRGB(currentFrame, currentFrame.height-20, 70); // 70 and 80 are 5 pixels away from the center width of the image
+			RGB center2 = getPixelRGB(currentFrame, currentFrame.height-20, 80);
 			
-			if(isPixelRed(returnHSV(center1.r,center1.g,center1.b)) || isPixelRed(returnHSV(center2.r,center2.g,center2.b)))
+			if(isPixelRed(center1) || isPixelRed(center2)) // Is there a barricade RIGHT infront of us?
 			{
-				setMotors(-ROBOT_SPEED, -ROBOT_SPEED); // Either one of the center pixels was red, there's a barricade RIGHT infront of us
+				if(isLeftSideRed(currentFrame)==true)
+				{
+					// Wall to our left, turn right while reversing
+					setMotors(ROBOT_SPEED, -ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					std::cout<<"Barricade RIGHT infront of us, reversing right on the spot.";
+				}
+				else
+				{
+					// Turn left while reversing
+					setMotors(-ROBOT_SPEED, ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					std::cout<<"Barricade RIGHT infront of us, reversing left on the spot.";					
+				}
+
 			}
-			else if(isLeftSideRed(currentFrame))
+			else if(isLeftSideRed(currentFrame)==true)
 			{
 				// Left side IS red
-				if(isFrontSideRed(currentFrame)) // Front side red, barricade infront of us so we turn right
+				if(isFrontSideRed(currentFrame)==true) // Front side red, barricade infront of us so we turn right
 				{
-					setMotors(ROBOT_SPEED, -ROBOT_SPEED); // Turn right on the spot
+					setMotors(ROBOT_SPEED, ROBOT_SPEED*0.4f); // Turn right
+					std::cout<<"Wall left, barricade infront, turning right.";
 				}
 				else
 				{
 					setMotors(ROBOT_SPEED, ROBOT_SPEED); // Continue forward
+					std::cout<<"Wall left, going forward.";
 				}
 			}
 			else // There is no wall to the left of us
 			{
-				setMotors(-ROBOT_SPEED, ROBOT_SPEED); // Turn left on the spot
+				setMotors(ROBOT_SPEED*0.4f, ROBOT_SPEED); // Turn left
+				std::cout<<"No wall left, turning left.";
 			}
 		}
 
 		//std::cout<<" vLeft="<<vLeft<<"  vRight="<<vRight<<std::endl;
 		//std::cout<<"Left="<<leftWhitePixels<<" Right="<<rightWhitePixels<<std::endl;
-		usleep(7500);
+		usleep(17500);
 	}
 
 }
