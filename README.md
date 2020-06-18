@@ -1,7 +1,7 @@
 # Instructions to run this project (Windows 10)
 
 Install the latest MinGW version from https://osdn.net/projects/mingw/releases/ for Windows.\
-When installing MinGW, make sure to tick the mingw32-gcc-g++ package as it is required.\ 
+When installing MinGW, make sure to tick the mingw32-gcc-g++ package as it is required.\
 Install Geany from https://www.geany.org/ for Windows.\
 First download the SFML library from https://www.sfml-dev.org/download/sfml/2.5.1/ and extract it somewhere you can remember.\
 Download the version that is appropriate for you and the one that aligns with your version of MinGW.\
@@ -15,7 +15,7 @@ Next open the makefile in the AVC_robot folder and change the top line to the fi
 Next run the server3.exe file and then the robot.exe file. The robot shoud move start to move.\
 To swap to a different maze open the config.txt file in AVC_server and change the first line called mazeFile to completion.txt for the completion maze or challenge.txt for the challenge maze. To change back you can write core.txt for the core maze.\
 You must save config.txt for the change in maze to work.\
-To swap what code the robot.exe is running you must first delete the robot.exe file and then edit the makefile in AVC_robot.\
+To swap what code the robot.exe is running you must first delete the robot.o file and the robot.exe file and then edit the makefile in AVC_robot.\
 For it to run the completion code change robot.cpp to robotcompletion.cpp then build it.\
 For it to run the challenge code change robot.cpp to robotchallenge.cpp.
 
