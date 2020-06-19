@@ -16,8 +16,18 @@ Next run the server3.exe file and then the robot.exe file. The robot shoud move 
 To swap to a different maze open the config.txt file in AVC_server and change the first line called mazeFile to completion.txt for the completion maze or challenge.txt for the challenge maze. To change back you can write core.txt for the core maze.\
 You must save config.txt for the change in maze to work.\
 To swap what code the robot.exe is running you must first delete the robot.o file and the robot.exe file and then edit the makefile in AVC_robot.\
-For it to run the completion code change robot.cpp to robotcompletion.cpp then build it.\
-For it to run the challenge code change robot.cpp to robotchallenge.cpp.
+For it to run the completion code change robot.cpp to robotcompletion.cpp in both instances and then on the line after robot: robot.o, change robot.o to robotcompletion.o and then build it.\
+For it to run the challenge code make the same changes you would for completion, replacing completion with challenge and then build it.\
+
+Example of edited makefile that runs the challenge robot code:\
+SFML = C://SFML/SFML-2.5.1  \
+CFLAGS = -I ${SFML}/include \
+LFLAGS = -L ${SFML}/lib -Wl,-R ${SFML}/lib  \ 
+LIBS = -lsfml-window  -lsfml-graphics -lsfml-system -lsfml-network  \
+robot: robot.o \
+	g++ $(LFLAGS) -o robot robotchallenge.o ${LIBS} \
+robot.o: robotchallenge.cpp robot.hpp \
+	g++  -c $(CFLAGS) robotchallenge.cpp robot.hpp  \
 
 
 # AVC Plan - Install Instructions at Bottom of Readme
