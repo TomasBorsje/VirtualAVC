@@ -160,7 +160,7 @@ bool isFrontSideRed(ImagePPM currentFrame)
 	bool isRed = false;
 	int width = 30;
 	int height = 60;
-	for(int i = width; i < currentFrame.width-width; i++) // Width, doesn't check edge **width** pixels
+	for(int i = currentFrame.width/2 - width; i < currentFrame.width/2 + width; i++) // Width, doesn't check edge **width** pixels
 	{
 		for(int row = 0; row < height; row++) // Height
 		{
@@ -180,13 +180,78 @@ bool isFrontSideRed(ImagePPM currentFrame)
 	}
 }
 
+float turnMultiplier(ImagePPM currentFrame) // Returns a value from 0.4 to 1 for turn multipler
+{											// 1 is straight ahead 0.4 is a sharp turn (0.4f is min_multipler right now)
+	int distanceFromFrontSide = currentFrame.height;
+	int width = 60;
+	int height = currentFrame.height;
+	int maxSpeedDistance = 30;
+	float max_multiplier = 0.4f;
+	float min_speed = 0.2f;
+	for(int i = width; i < currentFrame.width-width; i++) // Width, doesn't check edge **width** pixels
+	{
+		for(int row = 0; row < height; row++) // Height
+		{
+			if(isPixelRed(getPixelRGB(currentFrame, row, i)))
+			{
+				if(row<distanceFromFrontSide)
+				{
+					distanceFromFrontSide = currentFrame.height-row; // Get how far away the wall is
+				}
+			}
+		}
+	}
+	std::cout<<"Distance from wall infront: "<<distanceFromFrontSide<<std::endl;
+	float ratioDistance = (float)distanceFromFrontSide/(float)(currentFrame.height); // Get scale of 0-1 distance from wall to min distances
+	std::cout<<"Distance ratio: "<<ratioDistance<<std::endl;
+	if(distanceFromFrontSide<=maxSpeedDistance) // If the distance is under the closest we can be
+	{
+		std::cout<<"Turn rate under minimum: "<<max_multiplier<<std::endl;
+		return max_multiplier; // Fastest turn we can
+
+	}
+	else
+	{
+		std::cout<<"Turn rate: "<<(float)(max_multiplier + (1-max_multiplier)*ratioDistance)<<std::endl; // Otherwise turn depending on how fast we need to
+		return (float)(max_multiplier + (1-max_multiplier)*ratioDistance - min_speed);
+		
+	}
+}
+
+float middleStabilizer(ImagePPM currentFrame, double ROBOT_SPEED) // Returns a value from 0.4 to 1 for turn multipler
+{											// 1 is straight ahead 0.4 is a sharp turn (0.4f is min_multipler right now)
+
+	int totalRedXValue = 0;
+	int totalRedPixels = 0;
+	double turn_rate = 0.4;
+	double turn_multiplier = 2;
+	for(int i = 0; i < currentFrame.width; i++) // Width, doesn't check edge **width** pixels
+	{
+		for(int row = 0; row < currentFrame.height; row++) // Height
+		{
+			if(isPixelRed(getPixelRGB(currentFrame, row, i)))
+			{
+				totalRedXValue += i;
+				totalRedPixels++;
+			}
+		}
+	}
+	
+	double averageRedXValue = (double)totalRedXValue / (double)totalRedPixels;
+
+	double ratio = averageRedXValue / (double)currentFrame.width;// Ratio should be 0 to 1 (left average to right average)
+	
+	setMotors(ROBOT_SPEED + (1-ratio)*turn_rate*turn_multiplier,ROBOT_SPEED + (ratio-1)*turn_rate*turn_multiplier);
+	
+}
+
 int main(){
     // Declare constants
     const static int WADDLE_WIDTH = 50; 
     const static int WADDLE_HEIGHT = 40;
     const static int PIXEL_THRESHOLD = 5;
     const static double ROBOT_SPEED = 16.5;
-    const static double TURN_MULTIPLIER = 0.25;
+    const static float TURN_MULTIPLIER = 0.4f;
 	
     if (initClientRobot() !=0){
 	std::cout<<" Error initializing robot"<<std::endl;
@@ -275,7 +340,7 @@ int main(){
 		}
 	    else // There is no white line, we do this instead of white line logic
 	    {
-	    
+			
 			// Robot Algorithm:
 			// If there is something infront, turn around
 			// Then, if there is a wall to the left:
@@ -296,13 +361,13 @@ int main(){
 				if(isLeftSideRed(currentFrame)==true)
 				{
 					// Wall to our left, turn right while reversing
-					setMotors(ROBOT_SPEED, -ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					setMotors(ROBOT_SPEED*2, -ROBOT_SPEED*2); // One of the center pixels was red, there's a barricade infront of us
 					std::cout<<"Barricade RIGHT infront of us, reversing right on the spot.";
 				}
 				else
 				{
 					// Turn left while reversing
-					setMotors(-ROBOT_SPEED, ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					setMotors(-ROBOT_SPEED*2, ROBOT_SPEED*2); // One of the center pixels was red, there's a barricade infront of us
 					std::cout<<"Barricade RIGHT infront of us, reversing left on the spot.";					
 				}
 
@@ -312,18 +377,19 @@ int main(){
 				// Left side IS red
 				if(isFrontSideRed(currentFrame)==true) // Front side red, barricade infront of us so we turn right
 				{
-					setMotors(ROBOT_SPEED, ROBOT_SPEED*0.4f); // Turn right
+					setMotors(ROBOT_SPEED, ROBOT_SPEED*turnMultiplier(currentFrame)); // Turn right
 					std::cout<<"Wall left, barricade infront, turning right.";
 				}
 				else
 				{
-					setMotors(ROBOT_SPEED, ROBOT_SPEED); // Continue forward
+					//setMotors(ROBOT_SPEED, ROBOT_SPEED); // Continue forward, should ajdust to give space on left side of robot (turning right away from wall)
+					middleStabilizer(currentFrame, ROBOT_SPEED);
 					std::cout<<"Wall left, going forward.";
 				}
 			}
 			else // There is no wall to the left of us
 			{
-				setMotors(ROBOT_SPEED*0.4f, ROBOT_SPEED); // Turn left
+				setMotors(ROBOT_SPEED*turnMultiplier(currentFrame), ROBOT_SPEED); // Turn left
 				std::cout<<"No wall left, turning left.";
 			}
 		}
