@@ -18,11 +18,10 @@ You must save config.txt for the change in maze to work.\
 To swap what code the robot.exe is running you must first delete the robot.o file and the robot.exe file and then edit the makefile in AVC_robot.\
 For it to run the completion code change robot.cpp to robotcompletion.cpp in both instances and then on the line after robot: robot.o, change robot.o to robotcompletion.o and then build it.\
 For it to run the challenge code make the same changes you would for completion, replacing completion with challenge and then build it.\
-
 Example of edited makefile that runs the challenge robot code:\
 SFML = C://SFML/SFML-2.5.1  \
 CFLAGS = -I ${SFML}/include \
-LFLAGS = -L ${SFML}/lib -Wl,-R ${SFML}/lib  \ 
+LFLAGS = -L ${SFML}/lib -Wl,-R ${SFML}/lib  \
 LIBS = -lsfml-window  -lsfml-graphics -lsfml-system -lsfml-network  \
 robot: robot.o \
 	g++ $(LFLAGS) -o robot robotchallenge.o ${LIBS} \
