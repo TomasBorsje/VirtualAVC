@@ -240,7 +240,7 @@ int main(){
 		
 		// Calculate average X location of white pixels
 		averageWhiteXValue = (double)totalWhiteXValue / (double)totalWhitePixels ;
-		if(leftWhiteLine==true)
+		if(!leftWhiteLine)
 		{
 			// Check there are actually pixels, otherwise the robot does not do anything relating to the white line
 			if(totalWhitePixels > 0)
@@ -288,40 +288,58 @@ int main(){
 			// Now we must check if there is red right infront of the robot
 			// If there is, we REVERSE before doing anything else
 			
-			RGB center1 = getPixelRGB(currentFrame, currentFrame.height-20, 75); // 70 and 80 are 5 pixels away from the center width of the image
-			RGB center2 = getPixelRGB(currentFrame, currentFrame.height-20, 85);
+			RGB center1 = getPixelRGB(currentFrame, currentFrame.height-20, 70); // 70 and 80 are 5 pixels away from the center width of the image
+			RGB center2 = getPixelRGB(currentFrame, currentFrame.height-20, 80);
 			
-			if(isPixelRed(center1)==true || isPixelRed(center2)==true) // Is there a barricade RIGHT infront of us?
+			if(isPixelRed(center1) || isPixelRed(center2)) // Is there a barricade RIGHT infront of us?
 			{
-				if(isLeftSideRed(currentFrame)==true)
+				if(isLeftSideRed(currentFrame)==true && isRightSideRed(currentFrame)==false)
 				{
 					// Wall to our left, turn right while reversing
-					setMotors(ROBOT_SPEED, -ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					setMotors(-ROBOT_SPEED, ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
 					std::cout<<"Barricade RIGHT infront of us, reversing right on the spot.";
+				}
+				else if (isRightSideRed(currentFrame)==true && isLeftSideRed(currentFrame)==true){
+					setMotors(ROBOT_SPEED*1.2f, -ROBOT_SPEED);
 				}
 				else
 				{
 					// Turn left while reversing
-					setMotors(-ROBOT_SPEED, ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
+					setMotors(ROBOT_SPEED, -ROBOT_SPEED); // One of the center pixels was red, there's a barricade infront of us
 					std::cout<<"Barricade RIGHT infront of us, reversing left on the spot.";					
 				}
 
 			}
-			else if (isLeftSideRed(currentFrame)==true && isRightSideRed(currentFrame)==true && isFrontSideRed(currentFrame)==true){
-				setMotors(ROBOT_SPEED*1.4f, ROBOT_SPEED); // Turn right
+			else if(isLeftSideRed(currentFrame)==true)
+			{
+				// Left side IS red
+				if(isFrontSideRed(currentFrame)==true) // Front side red, barricade infront of us so we turn right
+				{
+					setMotors(ROBOT_SPEED*1.2f, ROBOT_SPEED); // Turn right
+					std::cout<<"Wall left, barricade infront, turning right.";
+				}
+				else
+				{
+					setMotors(ROBOT_SPEED, ROBOT_SPEED); // Continue forward
+					std::cout<<"Wall left, going forward.";
+				}
 			}
-			else if(isLeftSideRed(currentFrame)==true && isRightSideRed(currentFrame)==true && isFrontSideRed(currentFrame)==false)
+			//else if (isRightSideRed(currentFrame)==true){
+				//setMotors(ROBOT_SPEED, ROBOT_SPEED*1.2f);
+			//}
+			else if (isLeftSideRed(currentFrame)==false && isFrontSideRed(currentFrame)==false && isRightSideRed(currentFrame)==false){
+				setMotors(ROBOT_SPEED, ROBOT_SPEED*1.2f);
+			}
+			else if (isFrontSideRed(currentFrame)==true && isRightSideRed(currentFrame)==true){
+				setMotors(ROBOT_SPEED, ROBOT_SPEED*1.2f);
+			}
+			else if (isFrontSideRed(currentFrame)==true){
+				setMotors(ROBOT_SPEED, ROBOT_SPEED*1.2f);
+			}
+			else // There is no wall to the left of us
 			{
 				setMotors(ROBOT_SPEED, ROBOT_SPEED);
-			}
-			else if (isLeftSideRed(currentFrame)==true && isRightSideRed(currentFrame)==false && isFrontSideRed(currentFrame)==true){
-				setMotors(ROBOT_SPEED*1.4f, ROBOT_SPEED); // Turn right
-			}
-			else if (isLeftSideRed(currentFrame)==true && isRightSideRed(currentFrame)==false && isFrontSideRed(currentFrame)==false){
-				setMotors(ROBOT_SPEED*1.4f, ROBOT_SPEED); // Turn right
-			}
-			else if (isLeftSideRed(currentFrame)==false && isRightSideRed(currentFrame)==false && isFrontSideRed(currentFrame)==true){
-				setMotors(ROBOT_SPEED, ROBOT_SPEED*1.4f); // Turn left
+				std::cout<<"No wall left";
 			}
 		}
 
