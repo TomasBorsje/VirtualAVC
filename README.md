@@ -26,10 +26,12 @@ LIBS = -lsfml-window  -lsfml-graphics -lsfml-system -lsfml-network  \
 robot: robot.o \
 	g++ $(LFLAGS) -o robot robotchallenge.o ${LIBS} \
 robot.o: robotchallenge.cpp robot.hpp \
-	g++  -c $(CFLAGS) robotchallenge.cpp robot.hpp  \
+	g++  -c $(CFLAGS) robotchallenge.cpp robot.hpp
 
 
-# AVC Plan - Install Instructions at Bottom of Readme
+
+
+# AVC Plan
 
 # Team Name: Team 22
 
